@@ -1,0 +1,82 @@
+plugins {
+    id 'java'
+    id 'io.quarkus'
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+configurations.all {
+    exclude group:"org.checkerframework", module: "checker-qual"
+    exclude group:"org.codehaus.mojo", module: "animal-sniffer-annotations"
+
+    exclude group: "io.grpc" , module: "grpc-netty-shaded"
+}
+dependencies {
+    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation 'io.quarkus:quarkus-arc'
+    implementation 'io.quarkus:quarkus-resteasy-reactive'
+    testImplementation 'io.quarkus:quarkus-junit5'
+    testImplementation 'io.rest-assured:rest-assured'
+    implementation("io.quarkus:quarkus-core-deployment")
+
+
+
+    // https://mvnrepository.com/artifact/io.quarkus.arc/arc-processor
+    implementation("io.quarkus.arc:arc-processor")
+// https://mvnrepository.com/artifact/io.quarkus/quarkus-arc-deployment
+    implementation("io.quarkus:quarkus-arc-deployment")
+// https://mvnrepository.com/artifact/io.quarkus/quarkus-vertx-deployment
+    implementation("io.quarkus:quarkus-vertx-deployment")
+
+
+    // OpenTelemetry core
+    implementation platform("io.opentelemetry:opentelemetry-bom:1.24.0")
+    implementation platform('io.opentelemetry:opentelemetry-bom-alpha:1.24.0-alpha')
+
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp")
+    implementation("io.opentelemetry:opentelemetry-sdk")
+    implementation("io.opentelemetry:opentelemetry-sdk-logs")
+    implementation("io.opentelemetry:opentelemetry-exporter-otlp-logs")
+    implementation("io.opentelemetry:opentelemetry-semconv")
+    implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure")
+
+    // dont remove this dependencies or you will get a native build error
+    implementation("io.opentelemetry:opentelemetry-exporter-common")
+
+    implementation('io.opentelemetry:opentelemetry-exporter-logging')
+    // https://mvnrepository.com/artifact/io.opentelemetry/opentelemetry-extension-annotations
+    implementation("io.opentelemetry:opentelemetry-extension-annotations")
+    implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations")
+
+    implementation("io.grpc:grpc-netty")
+    implementation("io.grpc:grpc-okhttp")
+    implementation("io.grpc:grpc-stub")
+    implementation("io.opentelemetry:opentelemetry-exporter-jaeger")
+    implementation("io.opentelemetry:opentelemetry-exporter-prometheus")
+
+    // OpenTelemetry logback appender
+
+    implementation('io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0')
+    implementation("io.quarkiverse.logging.logback:quarkus-logging-logback:0.13.0")
+    implementation("org.jboss.slf4j:slf4j-jboss-logmanager:2.0.1.Final")
+
+}
+
+group 'org.acme'
+version '1.0.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
